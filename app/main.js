@@ -6,13 +6,17 @@ console.log("Logs from your program will appear here!");
 // Uncomment this block to pass the first stage
 const server = net.createServer((connection) => {
   // Handle connection
-  connection.addListener('data', (data) => {
-    const dataStr = data.toString();
-    
-    if (dataStr === '*1\r\n$4\r\nPING\r\n') {
-      connection.write('+PONG\r\n');
-    }
-  })
+    connection.on("data", (data) => {
+      const commands = Buffer.from(data).toString().split("\\r\\n");
+      // *2\r\n $5 \r\n ECHO \r\n $3 \r\n hey \r\n
+      if (commands[2] == "ECHO") {
+        const str = commands[4].trim();
+        console.log(str)
+        const l = str.length;
+        return connection.write("$" + l + "\r\n" + str + "\r\n");
+      }
+      connection.write("+PONG\r\n");
+    });
 
   process.on('exit', () => {
     server.close();
