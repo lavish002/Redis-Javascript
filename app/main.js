@@ -7,9 +7,9 @@ console.log("Logs from your program will appear here!");
 const server = net.createServer((connection) => {
   // Handle connection
     connection.on("data", (data) => {
-      const commands = Buffer.from(data).toString().split("\\r\\n");
+      const commands = Buffer.from(data).toString().split("\r\n");
       // *2\r\n $5 \r\n ECHO \r\n $3 \r\n hey \r\n
-      if (commands[2] == "ECHO") {
+      if (commands[2].toUpperCase() == "ECHO") {
         const str = commands[4].trim();
         console.log(str)
         const l = str.length;
